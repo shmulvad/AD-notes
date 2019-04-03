@@ -1,0 +1,22 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{pdfpages}
+
+% Alle dispositions-forsider to gange (en til mig + en til eksaminator) samt alle fulde dispositioner én gang:
+\newcommand{\ad}[1]{
+	\includepdf[pages=1]{../#1.pdf}
+	\includepdf[pages=1]{../#1.pdf}
+	\includepdf[pages=-]{../#1.pdf}
+}
+
+
+% Det at printe på KU er lidt irriterende, så det er nemmest blot at tilføje ét samlet pdf-dokument. Dette samler alle dispositionerne til ét dokument.
+\begin{document}
+\ad{1DivideAndConquer/divAndCon}
+\ad{2FibHeaps/fibHeaps}
+\ad{3BinSearchTrees/binSearchTrees}
+\ad{4DynProgramming/dynPro}
+\ad{5GreedyAlgorithms/greedy}
+\ad{6MinSpanTrees/mst}
+\ad{7ShortestPath/shortestPath}
+\ad{8AmortizedAnalysis/amortized}
+\end{document}

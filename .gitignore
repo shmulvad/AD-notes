@@ -1,0 +1,20 @@
+# .pdf not in gitignore, since this repo is mainly about the pdf's
+#*.pdf
+
+#latex
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+# sketch files used to make some figures
+*.sketch

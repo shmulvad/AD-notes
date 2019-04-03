@@ -1,0 +1,204 @@
+\input{../preamble.tex}
+\title{Eksamensdisposition - Fibonacci Heaps}
+
+\begin{document}
+\maketitle
+
+% Desuden skal hver studerende i gruppen udarbejde en individuel disposition for emnet "Binære søgetræer", som er et af emnerne til eksamen. En disposition skal bestå af de vigtigste punkter, du vil komme ind på til eksamen.
+% Tænk på dispositionen som noget, du kan have med dig til eksamen, og som kan hjælpe dig med at huske, hvad du overordnet vil gennemgå til emnet "Binære søgetræer".
+% Dispositionen skal ikke indeholde detaljerede beviser og lignende, men de mere overordnede delemner. Sørg for at gøre den kortfattet - f.eks. 5-10 punkter med stikord/-sætninger.
+
+
+\begin{itemize}
+\item \textbf{Motivation}
+
+
+\item \textbf{Struktur}
+\begin{itemize}
+	\item Egenskaber
+	\item Pointers/attributter
+	\item Operationer
+\end{itemize}
+
+
+\item \textbf{Håndkørsel af \texttt{Extract-Min}}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.4\textwidth]{extract-min-simple.pdf}
+	\end{center}
+\end{figure}
+
+\item \textbf{Potentialefunktionen}
+%\begin{itemize}
+%	\item Definér potentialefunktion: $\Phi(H) \ = \ \underbrace{t(H)}_{\text{\makebox[0pt]{Antal rod-knuder}}} \ + \ 2   \overbrace{m(H)}^{\text{\makebox[0pt]{Antal markerede knuder}}}$.
+%	\item Antag $D(n) = O(\lg n)$.
+%\end{itemize}
+
+\item \textbf{Amortiseret køretid for \texttt{Extract-Min}}
+
+\item \textbf{Håndkørsel af \texttt{Decrease-Key}}
+\item \textbf{Amortiseret køretid for \texttt{Decrease-Key}}
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fibonacci Heaps}
+
+
+
+\begin{itemize}
+\item \textbf{Motivation}
+\begin{itemize}
+	\item God amortiseret køretid, mange af operationerne er i konstant tid.
+	\item Gør den velegnet til applikationer som benytter den mange gange. Særligt når \texttt{Extract-Min} og \texttt{Delete} bliver kaldt få gange relativt set.
+	\item Bl.a. Dijkstra's algoritme og Prim's algoritme (Minimum Spanning Trees) gør brug af Fibonacci Heaps.
+	\item Ligesom vi her vil tale om en Min-Heap kunne man ligeledes lave en Max-Heap.
+\end{itemize}
+
+
+
+\item \textbf{Struktur}
+
+\begin{itemize}
+	\item Min-heap-egenskab: Key'en for en knude er altid $\geq$ key'en for dens forælder. En heap $H$ har pointeren $H.min$ til minimumsknuden ved roden af træet.
+	\item Knuden $x$ har pointerne/attributerne
+	\begin{itemize}
+		\item $x.p$ - Forælder-knude
+		\item $x.child$ - En vilkårlig af børnene
+		\item $x.left$ og $x.right$
+		\item $x.mark$ - Sandhedsværdi som markerer om knuden har mistet ét barn siden den sidst blev gjort til et barn af en anden knude. Nye knuder er umarkerede, og bliver derudover umarkerede hver gang de bliver gjort til barnet af en anden knude.
+		\item $x.degree$ - Antallet af børn i barnelisten (f.eks. for knuden $x$ med $x.key = 3$ i figuren nedenfor er $x.degree = 3$).
+	\end{itemize}
+	
+	\item Når en Fibonacci Heap $H$ er tom er $H.min = NIL$.
+	\item Vi bruger en cirkulær doubly linked lists til at forbinde rodknuderne og børnelisterne for en bestemt knude (se nedenfor for illustration):
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.7\textwidth]{linked.png}
+		\end{center}
+	\end{figure}
+	
+	
+	\item Operationernes amortiserede køretid og argumenter ($H =$ heap, $x =$ knude og $k =$ ny key):
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{lc}
+			\textbf{Operation}               & \multicolumn{1}{l}{\textbf{Amortiseret køretid}} \\ \hline
+			\texttt{Make-Heap}$()$           & $\Theta(1)$                                      \\
+			\texttt{Insert}$(H, x)$          & $\Theta(1)$                                      \\
+			\texttt{Minimum}$(H)$            & $\Theta(1)$                                      \\
+			\texttt{Union}$(H_1, H_2)$       & $\Theta(1)$                                      \\
+			\texttt{Decrease-Key}$(H, x, k)$ & $\Theta(1)$                                      \\
+			\texttt{Extract-Min}$(H)$        & $\Theta(\lg n)$                                  \\
+			\texttt{Delete}$(H, x)$          & $\Theta(\lg n)$
+		\end{tabular}
+	\end{table}
+	\item Det tager lang tid at søge efter et element, så i ovenstående køretider antager vi at vi allerede har en pointer direkte til den knuden $x$ vi gerne vil udføre en operation ved.
+\end{itemize}
+
+\item \textbf{Håndkørsel af \texttt{Extract-Min}}\\
+Her er hoben før operationen og hoben efter tegnet. \texttt{Extract-Min} er det hvor vi laver et array $A[0..D(n)]$ og ser på degree af hver knude i roden.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{extract-min.pdf}
+	\end{center}
+\end{figure}
+
+
+\item \textbf{Håndkørsel af \texttt{Decrease-Key}}\\
+Tegn en ekstra knude under 7 på det træ du kom frem til før. Fjern knuderne med key 10 og key 8. Træet før vi begynder, efter første decrease og efter andet decrease vil se således ud:
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=1\textwidth]{decrease-key.pdf}
+	\end{center}
+\end{figure}
+% Lynhurtig forklaring: Man nedsætter værdien for ens knude $x$ og flytter den op i roden. Hvis den forælder ikke er markeret så markerer man nu den, men mere sker ikke. Hvis forælderen er markeret i forvejen, så flyttes den også op i roden (og dens forælder reagerer ligeledes på den har mistet sit barn osv.)
+
+
+\item \textbf{Potentialefunktion}
+\begin{itemize}
+	\item Definer potentialefunktionen:
+	$$
+	\Phi(H) \ = \ \underbrace{t(H)}_{\text{\makebox[0pt]{Antal rod-knuder}}} \ + \ 2   \overbrace{m(H)}^{\text{\makebox[0pt]{Antal markerede knuder}}}
+	$$
+	
+	\item Gyldighed: Vi ser at den er gyldig, da idet der er ingen knuder i vors Fib-Heap vil den være 0. Ellers kan der kun være et positivt antal knuder og/eller markerede knuder, og derfor vil den ellers altid være positiv.
+	
+	\item Den amortiserede cost af enhver operation er dens faktiske cost plus ændringen i potentialet. Den totale amortiserede cost af $n$ operationer er: \textit{(Vi ved dette fra kapitel 17, uddyb ikke)}
+	$$
+	\sum_{i=1}^n \hat c_i = \p{ \sum_{i=1}^n c_i } + \Phi(D_n) - \Phi(D_0)
+	$$
+	
+	\item Antag øvre grænse $D(n) = O(\lg n)$ for den maksimale degree på enhver knude i en $n$-knude stor Fib-Heap. \textit{(Kursorisk, skal ikke bevises)}
+\end{itemize}
+
+\newpage
+\item \textbf{Bevis for amortiseret køretid for \texttt{Extract-Min} (s. 517 bund - 518)}
+\begin{itemize}
+		\item[Faktisk cost:] $O(D(n))$ fra først maksimalt at flytte $D(n)$ børn op i roden og for at initialisere vores $D(n)$ lange degree-liste $A$ samt at finde $H.min$ til sidst.
+		
+		Derudover får vi i værste fald at antallet af rod-knuder lige efter at have \texttt{Consolidate}'d er $D(n) + t(H) - 1$ hvor:
+		$$
+		\underbrace{D(n)}_{\text{\makebox[50pt]{Børnene fra den udtrakte knude}}} + \overbrace{t(H)}^{\text{\makebox[50pt]{De originale rodknuder}}} \underbrace{- 1}_{\text{\makebox[50pt]{Det udtrakte element}}}
+		$$
+		
+		Vi ved, at vi hver eneste gang i loopet enten rykker én frem eller linker to knuder sammen, og derfor er det totale arbejde i værste fald følgende, hvor vi antager uligheden:
+		$$
+		O \pBig{ D(n) + t(H) } \leq D(n) + t(H)
+		$$
+		
+		
+		\item[Potentiale:] Potentialet før er $t(H) + 2m(H)$\\
+		Potentialet efter er $(D(n) + 1) + 2m(H)$ (siden højest $D(n) + 1$ rødder er tilbage da det er længden af vores array $A$ og ingen knuder bliver markeret).
+		
+		\item[Udregning:]
+		\begin{align}
+		\hat c_i &= c_i + \Phi(H') - \Phi(H)\\
+		    &= D(n) + t(H) + \pBig{(D(n) + 1) + 2m(H)} - \pBig{ t(H) + 2m(H) } \label{eq:reduce} \\
+		    &= 2D(n) + 1 \label{eq:dominate} \\
+		    &= O(D(n)) \nonumber \\
+		    &= O(\lg n) \nonumber
+		\end{align}		
+		
+		\item[Intuition:] Vores cost af at udføre hver eneste link af to knuder bliver betalt for af reduktionen i potentialet der sker når et link reducerer antallet af knuder i træet med 1.
+\end{itemize}
+
+
+
+\item \textbf{Bevis for amortiseret køretid for \texttt{Decrease-Key} (s. 520-522)}
+\begin{itemize}
+	\item[Faktisk cost:] Selve det at formindske vores key tager konstant tid. Herefter kan der være $c$ kald hvor forælderknuderne går fra sand til falsk så de skal flyttes op i roden, som hver for sig tager konstant tid, hvorved vi får en køretid på $c$.
+	
+	\item[Potentiale:] For alle $c$ rekursive kald pånær det sidste fjerner vi markeringen for forælderknude og flytter vores nuværende knude op i roden. Altså vil der efter udførslen være følgende antal træer:
+	$$
+	t(H') = t(H) + c
+	$$
+	
+	Derudover vil der højst være følgende antal markerede knuder, da $c-1$ træer blev umarkeret i processen, mens den allersidste muligvis blev markeret:
+	$$
+	m(H') = m(H) - c + 2
+	$$
+	
+	\item[Udregning:] Ændringen i potentiale vil højst være:
+	\begin{align*}
+	\Phi(H') - \Phi(H)
+	&= \pBig{ (t(H) + c) + 2(m(H) - c + 2) } - \pBig{ t(H) + 2m(H) }\\
+	&= \pBig{ (t(H) + c) + 2m(H) - 2c + 4 } - \pBig{ t(H) + 2m(H) }\\
+	&= 4 - c
+	\end{align*}
+	
+	Herved fås den amortiserede køretid til at være:
+	$$
+	\hat c_i = c + (4 - c) = O(1)
+	$$
+	
+\end{itemize}
+\end{itemize}
+\end{document}

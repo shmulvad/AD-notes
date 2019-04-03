@@ -1,0 +1,140 @@
+\documentclass[a4paper,11pt]{article}
+% Various packages
+\usepackage{siunitx}
+\usepackage[utf8]{inputenc} % æøå
+\usepackage[T1]{fontenc} % mere æøå
+\usepackage[danish]{babel} % orddeling
+\usepackage{verbatim} % så man kan skrive ren tekst
+\usepackage{graphicx}
+\graphicspath{{assets/}}
+\usepackage{a4wide}
+\usepackage{url}
+\usepackage[left=2cm,top=2cm,bottom=1.5cm,right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{wrapfig}
+\usepackage{fixme}
+\usepackage{color}
+\usepackage{pstricks}
+\usepackage{pdfpages} % include pdf
+\usepackage{float} % Use [H] in figures
+\usepackage{subcaption} % For subfigures
+\usepackage{color} % May be necessary if you want to color links
+\usepackage{hyperref} % Make references clickable
+\usepackage[nameinlink,capitalize]{cleveref} % Make eq:refs be in style (1)
+\usepackage[linesnumbered, commentsnumbered, lined, ruled, vlined,
+%noend  % Have no ⌊-like symbol to indicate end of scope in pseudocode
+]{algorithm2e} % Doc: https://goo.gl/6bC1qZ
+
+% Ændr på navnene der vises når man bruger \autoref{label}
+\def\sectionautorefname{Sektion}
+\renewcommand{\equationautorefname}{Ligning}
+\def\figureautorefname{Figur}
+\AtBeginDocument{\renewcommand{\ref}[1]{\autoref{#1}}}
+
+% Sæt \ref{} til at kalde \autoref{}
+\AtBeginDocument{\renewcommand{\ref}[1]{\autoref{#1}}}
+
+% Ændr ''*'' i math-felter til \cdot
+\DeclareMathSymbol{*}{\mathbin}{symbols}{"01}
+
+% Sæt farver for interne referencer og links
+\definecolor{darkblue}{RGB}{25,25,112}
+\hypersetup{
+	colorlinks=true,    %set true if you want colored links
+	linktoc=all,        %set to all if you want both sections and subsections linked
+	linkcolor=darkblue, %choose some color if you want links to stand out
+	filecolor=blue,     %
+	citecolor=black,    %
+	urlcolor=cyan,      %
+}
+
+% Set indentation to 0:
+\setlength\parindent{0pt}
+
+% Keywords relateret til algorithm2e pakken
+\newcommand{\True}{\textbf{true}}\newcommand{\False}{\textbf{false}}
+\SetStartEndCondition{ }{}{}%
+\SetKwProg{Fn}{def}{\string:}{}
+\SetKw{KwTo}{to}
+\SetKwFor{For}{for}{}{}% 
+\SetKwFor{ForEach}{foreach}{}{}% 
+\SetKwIF{If}{ElseIf}{Else}{if}{}{elif}{else}{end}% 
+\SetKwFor{While}{while}{}{end}\SetKwProg{Fn}{}{}{}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\setlength{\algomargin}{3em}\DontPrintSemicolon
+
+\newcommand{\longspace}{{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\renewcommand{\P}{{\mathbb P}}
+\newcommand{\parfrac}[1]{\frac{\partial}{\partial #1}}
+\renewcommand{\num}{{\textrm{num} }}
+\newcommand{\size}{{\textrm{size} }}
+\newcommand{\ift}{{\textrm{if } }}
+
+% Dynamiske (), <>, ceil, floor
+\newcommand{\p}[1]{\left( #1 \right)}
+\newcommand{\pbig}[1]{\big( #1 \big)}
+\newcommand{\pBig}[1]{\Big( #1 \Big)}
+\newcommand{\pbigg}[1]{\bigg( #1 \bigg)}
+\newcommand{\larr}[1]{\left< #1 \right>}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+
+% Squiggly arrows
+\DeclareFontFamily{U} {MnSymbolC}{}
+
+\DeclareFontShape{U}{MnSymbolC}{m}{n}{
+	<-6> MnSymbolC5
+	<6-7> MnSymbolC6
+	<7-8> MnSymbolC7
+	<8-9> MnSymbolC8
+	<9-10> MnSymbolC9
+	<10-12> MnSymbolC10
+	<12-> MnSymbolC12}{}
+\DeclareFontShape{U}{MnSymbolC}{b}{n}{
+	<-6> MnSymbolC-Bold5
+	<6-7> MnSymbolC-Bold6
+	<7-8> MnSymbolC-Bold7
+	<8-9> MnSymbolC-Bold8
+	<9-10> MnSymbolC-Bold9
+	<10-12> MnSymbolC-Bold10
+	<12-> MnSymbolC-Bold12}{}
+
+\DeclareSymbolFont{MnSyC} {U} {MnSymbolC}{m}{n}
+
+\DeclareMathSymbol{\MNrhd}{\mathbin}{MnSyC}{76}
+\DeclareMathSymbol{\MNlhd}{\mathbin}{MnSyC}{78}
+% =============================================
+\DeclareFontFamily{U} {MnSymbolD}{}
+
+\DeclareFontShape{U}{MnSymbolD}{m}{n}{
+	<-6> MnSymbolD5
+	<6-7> MnSymbolD6
+	<7-8> MnSymbolD7
+	<8-9> MnSymbolD8
+	<9-10> MnSymbolD9
+	<10-12> MnSymbolD10
+	<12-> MnSymbolD12}{}
+\DeclareFontShape{U}{MnSymbolD}{b}{n}{
+	<-6> MnSymbolD-Bold5
+	<6-7> MnSymbolD-Bold6
+	<7-8> MnSymbolD-Bold7
+	<8-9> MnSymbolD-Bold8
+	<9-10> MnSymbolD-Bold9
+	<10-12> MnSymbolD-Bold10
+	<12-> MnSymbolD-Bold12}{}
+
+\DeclareSymbolFont{MnSyD} {U} {MnSymbolD}{m}{n}
+\DeclareMathSymbol{\MNsim}{\mathbin}{MnSyD}{2}
+
+% =============================================
+
+\usepackage{amssymb,amsmath,stackengine}
+\stackMath
+\newcommand\rsquigarrow[1]{%
+	\mathbin{\stackon[2pt]{\rightsquigarrow}{\scriptscriptstyle #1 }}
+}
+
+\author{Søren Mulvad, rbn601}

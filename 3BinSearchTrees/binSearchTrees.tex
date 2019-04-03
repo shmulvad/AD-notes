@@ -1,0 +1,136 @@
+\input{../preamble.tex}
+\title{Eksamensdisposition - Balancerede binære søgetræer}
+\begin{document}
+\maketitle
+
+% Desuden skal hver studerende i gruppen udarbejde en individuel disposition for emnet "Binære søgetræer", som er et af emnerne til eksamen. En disposition skal bestå af de vigtigste punkter, du vil komme ind på til eksamen.
+% Tænk på dispositionen som noget, du kan have med dig til eksamen, og som kan hjælpe dig med at huske, hvad du overordnet vil gennemgå til emnet "Binære søgetræer".
+% Dispositionen skal ikke indeholde detaljerede beviser og lignende, men de mere overordnede delemner. Sørg for at gøre den kortfattet - f.eks. 5-10 punkter med stikord/-sætninger.
+
+\begin{itemize}
+
+\item \textbf{Motivation}
+
+
+\item \textbf{Struktur for binære søgetræer}
+
+
+\item \textbf{Struktur for rød-sorte træer}
+
+\item \textbf{Bevis for at højden er $O(\lg n)$}
+
+
+\item \textbf{Opretholdelse af egenskaber}
+
+
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Balancerede binære søgetræer}
+
+
+
+\begin{itemize}
+\item \textbf{Motivation}
+\begin{itemize}
+	\item En effektiv datastruktur, som tilbyder worst-case garantier for ting som \texttt{Insertion}, \texttt{Deletion} og \texttt{Search}.
+	\item Bliver f.eks. brugt i plane-sweep algoritmen (der ser om linjesegmenter skærer hinanden), samt i Linuxkernen og til at understøtte forskellige operationer i flere programmeringssprog.
+\end{itemize}
+	
+	
+\item \textbf{Struktur for binære søgetræer}
+\begin{itemize}
+	\item Attributer for hver knude: $key$ samt $left$, $right$ og $p$.
+	\item Opsat så vi altid har $\leq$ elementer i venstre deltræ og $>$ elementer på højre deltræ.
+	\item Mange operationer, inklusiv \texttt{Insert}, \texttt{Search}, \texttt{Delete} samt \texttt{Max} og \texttt{Min} kan nu udføres i $O(h)$ tid. Ved tilfældige indsættelser kan man vise at højden vil blive $O(\lg n)$, men vi er ikke altid garanteret at indsættelserne er tilfældige.
+\end{itemize}
+
+\item \textbf{Struktur for rød-sorte træer}
+\begin{itemize}
+	\item Ligesom binære søgetræer med den ene ekstra attribut $color$, som kan være rød eller sort. Løser problemet med at garantere en højde $h = O(\lg n)$.
+	\item Opfylder 5 rød-sorte egenskaber:
+	\begin{enumerate}
+		\item Hver knude er enten rød eller sort
+		\item Roden er sort
+		\item Alle blade er $T.nil$, som er sort
+		\item Hvis en knude er rød, så er begge dens børn sorte
+		\item For hver eneste knude gælder, at alle simple veje fra knuden til dens efterkommere har det samme antal sorte knuder. Denne kalder vi $bh(x)$.
+	\end{enumerate}
+	\item Tegn figuren. Knudernes black-height $bh(x)$ er skrevet til venstre for dem:
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.65\textwidth]{rb.png}
+		\end{center}
+		%\caption{rb}
+		\label{fig:rb}
+	\end{figure}
+\end{itemize}
+
+
+\item \textbf{Bevis for at højden $h = O(\lg n)$ (s. 309)}
+\begin{itemize}
+	\item Jeg vil bevise, at et rødt-sort træ $x$ med $n$ interne knuder har en højde
+	$$
+	h = O(\lg n)
+	$$
+	\item Starter med Lemma. Lad $s(x)$ betegne antallet af interne knuder i et deltræ for knuden $x$. Vi starter så med ved stærk induktion at vise, at dette deltræ har mindst $2^{bh(x)} - 1$ interne knuder.
+	\begin{equation} \label{eq:lemma}
+	s(x) \geq 2^{bh(x)} - 1
+	\end{equation}
+	\item Base case ($x$ har en højde $h = 0$):
+	\begin{itemize}
+		\item $s(x) = 0$, da $x$ med den højde så må være et eksternt blad.
+		\item $bh(x) = 0$ og derfor $2^{bh(x)} - 1 = 0$.
+		\item Vi ser at \cref{eq:lemma} er overholdt.
+	\end{itemize}
+	\item Induktionsstep:
+	\begin{itemize}
+		\item Lad os nu sige knude $x$ har højde $h = k$. Så vil dens to børn $x.left$ og $x.right$ have en højde der højest er $k-1$. Pga. vores induktionsantagelse ved vi, at \cref{eq:lemma} gælder for dem. Vi får nu:
+		\begin{align}
+		s(x) &= s(x.left) + s(x.right) + 1\\
+		     &\geq 2^{bh(x.left)} - 1 + 2^{bh(x.right)} + 1 \label{eq:child-to-bh} \\
+		     &\geq 2^{bh(x)-1} - 1 + 2^{bh(x)-1} - 1 + 1 \label{eq:bh-min-1} \\
+		     &= 2^{bh(x)} - 1 \label{eq:bh-lemma-done}
+		\end{align}
+		I \cref{eq:child-to-bh} benytter vi vores induktionsantagelse.\\
+		I \cref{eq:bh-min-1} benytter vi, at et barn har en sort-højde $bh(x)$ (rød) eller $bh(x) - 1$ (sort).\\
+		I \cref{eq:bh-lemma-done} lader vi to 1-taller gå ud med hinanden og sætter de potenser sammen.
+	\end{itemize}
+	\item Hermed har vi bevist vores Lemma. Nu skal bevise vores påstand. Vi benytter nu egenskab nr. 4, nemlig at hver rød knude har to sorte børn. Dvs. antallet af røde knuder på en vej fra roden ikke kan være med end $h/2$. Derfor må antallet af sorte knuder på sådan en vej minimum være $h/2$. Derfor får vi, at $bh(r) \geq h/2$.
+	\item Nu samler vi disse uligheder hvorved vi får:
+	\begin{align*}
+	n = s(r) \geq 2^{bh(r)}& - 1 \geq 2^{h/2} - 1\\
+	&\Updownarrow \\
+	n + 1 &\geq 2^{h/2}\\
+	\lg(n+1) &\geq h/2\\
+	2\lg(n+1) &\geq h\\
+	h &= O(\lg n)
+	\end{align*}
+	\item Det er hermed bevist.
+\end{itemize}
+
+\textbf{Opretholdelse af egenskaber:}\\
+Jeg har hermed bevist, at højden på et RB-søgetræ er $O(\lg n)$. For at det skal gøre sig gældende er det meget vigtigt at vi overholder de fem egenskaber. Det kan vi gøre ved:
+\begin{enumerate}
+	\item LR (\texttt{Left-Rotation})
+	\item RR (\texttt{Righ-Rotation})
+	\item Farve en knude sort eller rød
+\end{enumerate}
+
+Vi kan have to cases når vi indsætter eller sletter en knude, det er:
+\begin{enumerate}
+	\item Vi overskrider ingen egenskaber og kan bare fortsætte
+	\item Vi overskrider egenskaber, og skal rette op på det.
+\end{enumerate}
+
+Hvis det er case 2, så kan vi løse problemet lokalt, og hvis problemet bliver ved med at probagere op ad træet, helt op til roden er rød, så maler vi den bare sort.
+
+\end{itemize}
+\end{document}
